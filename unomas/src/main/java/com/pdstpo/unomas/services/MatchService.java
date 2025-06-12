@@ -1,6 +1,10 @@
 package com.pdstpo.unomas.services;
 
+import com.pdstpo.unomas.model.EmailNotification;
+import com.pdstpo.unomas.model.INotificationStrategy;
 import com.pdstpo.unomas.model.MatchContext;
+import com.pdstpo.unomas.model.Notification;
+import com.pdstpo.unomas.model.entities.Comment;
 import com.pdstpo.unomas.model.entities.Match;
 import com.pdstpo.unomas.model.entities.Sport;
 import com.pdstpo.unomas.model.entities.User;
@@ -40,7 +44,20 @@ public class MatchService implements IMatchService {
         match.setCreator(user);
         match.setSport(sport);
 
-        return matchRepository.save(match);
+        List<User> interestedIn = userRepository.findUsersIsFavoriteSport(sport.getId());
+
+        Match createdMatch = matchRepository.save(match);
+
+        // Por ahora
+        INotificationStrategy notificator = new EmailNotification();
+
+        for (User u : interestedIn) {
+            if (!u.getId().equals(user.getId())) {
+                notificator.send(new Notification(u, match, "Fuiste invitado al partido con id " + createdMatch.getId()));
+            }
+        }
+
+        return createdMatch;
     }
 
     @Override
@@ -76,5 +93,38 @@ public class MatchService implements IMatchService {
 
         matchContext.getState().removePlayer(user);
         matchRepository.save(matchContext.getMatch());
+    }
+
+    @Override
+    public void addComment(Integer matchId, String content, Integer userId) {
+        MatchContext matchContext = matchRepository.findById(matchId);
+
+        if (matchContext == null) {
+            throw new EntityNotFoundException("No se encontró un partido con id: " + matchId);
+        }
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("No se encontró un usuario con id: " + userId));
+
+        Comment comment = new Comment();
+
+        comment.setUser(user);
+        comment.setMatch(matchContext.getMatch());
+        comment.setComment(content);
+
+        matchContext.getState().addComment(comment);
+
+        matchRepository.save(matchContext.getMatch());
+    }
+
+    @Override
+    public List<Comment> getAllComments(Integer matchId) {
+        MatchContext matchContext = matchRepository.findById(matchId);
+
+        if (matchContext == null) {
+            throw new EntityNotFoundException("No se encontró un partido con id: " + matchId);
+        }
+
+        return matchContext.getMatch().getComments();
     }
 }

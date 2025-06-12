@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import org.locationtech.jts.geom.Point;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -54,6 +55,17 @@ public class Match {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private List<User> players;
+
+    @OneToMany(mappedBy="match", cascade=CascadeType.ALL, orphanRemoval=true)
+    private List<Comment> comments = new ArrayList<>();
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
 
     public LevelEnum getMaxLevel() {
         return maxLevel;

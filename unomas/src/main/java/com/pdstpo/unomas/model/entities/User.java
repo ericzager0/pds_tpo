@@ -3,6 +3,9 @@ package com.pdstpo.unomas.model.entities;
 import jakarta.persistence.*;
 import org.locationtech.jts.geom.Point;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "users",
         uniqueConstraints = {
@@ -26,6 +29,17 @@ public class User {
 
     @Column(nullable = false, columnDefinition = "geography(Point,4326)")
     private Point location;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserSport> userSports = new ArrayList<>();
+
+    public List<UserSport> getUserSports() {
+        return userSports;
+    }
+
+    public void setUserSports(List<UserSport> userSports) {
+        this.userSports = userSports;
+    }
 
     public Integer getId() {
         return id;

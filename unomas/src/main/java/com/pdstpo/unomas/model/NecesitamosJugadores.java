@@ -1,5 +1,6 @@
 package com.pdstpo.unomas.model;
 
+import com.pdstpo.unomas.model.entities.Comment;
 import com.pdstpo.unomas.model.entities.Match;
 import com.pdstpo.unomas.model.entities.User;
 import com.pdstpo.unomas.model.enums.StateEnum;
@@ -20,12 +21,22 @@ public class NecesitamosJugadores extends State {
             throw new IllegalStateException("El jugador ya forma parte del partido.");
         }
 
-        match.getPlayers().add(user);
+        List<User> candidates = getMatchContext().getMatchmakingStrategy().search(match);
 
-        if (match.getPlayers().size() == requiredPlayers) {
-            getMatchContext().setState(new PartidoArmado());
-            match.setState(StateEnum.PARTIDO_ARMADO);
+        for (User candidate : candidates) {
+            if (candidate.getId().equals(user.getId())) {
+                match.getPlayers().add(user);
+
+                if (match.getPlayers().size() == requiredPlayers) {
+                    getMatchContext().setState(new PartidoArmado());
+                    match.setState(StateEnum.PARTIDO_ARMADO);
+                }
+
+                return;
+            }
         }
+
+        throw new IllegalStateException("El jugador no califica para este partido.");
     }
 
     @Override
@@ -59,5 +70,20 @@ public class NecesitamosJugadores extends State {
         } else {
             throw new IllegalArgumentException("El jugador con id " + requestingUser.getId() + " no es el creador del partido y por lo tanto no puede cancelarlo.");
         }
+    }
+
+    @Override
+    public void addComment(Comment comment) {
+        throw new IllegalStateException("No es posible comentar un partido aún no finalizado.");
+    }
+
+    @Override
+    public void init() {
+        throw new IllegalStateException("No es posible iniciar un partido que aún no está confirmado");
+    }
+
+    @Override
+    public void end() {
+        throw new IllegalStateException("No es posible finalizar un partido que aún no inició");
     }
 }

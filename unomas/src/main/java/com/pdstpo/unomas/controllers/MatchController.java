@@ -1,14 +1,15 @@
 package com.pdstpo.unomas.controllers;
 
-import com.pdstpo.unomas.model.dtos.MatchCreateDTO;
-import com.pdstpo.unomas.model.dtos.MatchResponseDTO;
-import com.pdstpo.unomas.model.dtos.PlayerAddDTO;
+import com.pdstpo.unomas.model.dtos.*;
+import com.pdstpo.unomas.model.entities.Comment;
 import com.pdstpo.unomas.model.entities.Match;
 import com.pdstpo.unomas.services.IMatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/matches")
@@ -34,6 +35,14 @@ public class MatchController {
         return ResponseEntity.ok(matchResponseDTO);
     }
 
+    @GetMapping("/{id}/comments")
+    public ResponseEntity<List<CommentResponseDTO>> getComments(@PathVariable Integer id) {
+        List<Comment> comments = matchService.getAllComments(id);
+        List<CommentResponseDTO> commentsDTOs = CommentResponseDTO.toDTOs(comments);
+
+        return ResponseEntity.ok(commentsDTOs);
+    }
+
     @PostMapping("/{id}/players")
     public ResponseEntity<Void> addPlayerToMatch(
             @PathVariable Integer id,
@@ -51,5 +60,12 @@ public class MatchController {
         matchService.removePlayer(matchId, playerId);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{matchId}/comments")
+    public ResponseEntity<Void> addComment(@PathVariable Integer matchId, @RequestBody CommentCreateDTO dto) {
+        matchService.addComment(matchId, dto.getComment(), dto.getUserId());
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

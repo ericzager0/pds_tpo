@@ -8,6 +8,12 @@ public class Notification {
     private Match match;
     private String message;
 
+    public Notification(User to, Match match, String message) {
+        this.to = to;
+        this.match = match;
+        this.message = message;
+    }
+
     public User getTo() {
         return to;
     }

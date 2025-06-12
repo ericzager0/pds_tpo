@@ -7,7 +7,6 @@ import com.pdstpo.unomas.model.enums.StateEnum;
 import org.locationtech.jts.geom.Point;
 
 import java.time.LocalDateTime;
-import java.util.logging.Level;
 
 public class MatchResponseDTO {
     private Integer id;

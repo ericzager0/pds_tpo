@@ -12,4 +12,17 @@ public interface IUserRepository extends JpaRepository<User, Integer> {
 
     @Query(value = "SELECT * FROM users WHERE ST_DWithin(location::geography, ST_SetSRID(ST_MakePoint(:lng, :lat), 4326)::geography, :distance)", nativeQuery = true)
     List<User> findUsersNearLocation(@Param("lng") double lng, @Param("lat") double lat, @Param("distance") double distance);
+
+    @Query(value = "SELECT u.* FROM users u " +
+            "JOIN match_users mu ON mu.user_id = u.id " +
+            "JOIN matches m ON m.id = mu.match_id " +
+            "WHERE m.sport_id = :sportId AND m.state = 'finalizado' " +
+            "GROUP BY u.id " +
+            "HAVING COUNT(m.id) >= :minCompletedMatches",
+            nativeQuery = true)
+    List<User> findUsersWithMinCompletedMatches(@Param("minCompletedMatches") int minCompletedMatches, @Param("sportId") Integer sportId);
+
+    @Query(value = "SELECT * FROM users u JOIN user_sports us ON us.user_id = u.id WHERE us.sport_id = :sportId AND us.favourite = true",
+            nativeQuery = true)
+    List<User> findUsersIsFavoriteSport(@Param("sportId") Integer sportId);
 }

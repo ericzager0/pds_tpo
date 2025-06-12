@@ -1,5 +1,6 @@
 package com.pdstpo.unomas.model;
 
+import com.pdstpo.unomas.model.entities.Comment;
 import com.pdstpo.unomas.model.entities.User;
 import com.pdstpo.unomas.model.enums.StateEnum;
 
@@ -53,5 +54,20 @@ public class PartidoArmado extends State {
         } else {
             throw new IllegalArgumentException("El jugador con id " + requestingUser.getId() + " no es el creador del partido y por lo tanto no puede cancelarlo.");
         }
+    }
+
+    @Override
+    public void addComment(Comment comment) {
+        throw new IllegalStateException("No es posible comentar un partido aún no finalizado.");
+    }
+
+    @Override
+    public void init() {
+        throw new IllegalStateException("No es posible iniciar un partido que aún no está confirmado");
+    }
+
+    @Override
+    public void end() {
+        throw new IllegalStateException("No es posible finalizar un partido que aún no inició");
     }
 }

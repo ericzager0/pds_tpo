@@ -1,5 +1,6 @@
 package com.pdstpo.unomas.controllers;
 
+import com.pdstpo.unomas.model.dtos.AddUserSportDTO;
 import com.pdstpo.unomas.model.dtos.UserCreateDTO;
 import com.pdstpo.unomas.model.dtos.UserResponseDTO;
 import com.pdstpo.unomas.model.entities.User;
@@ -26,6 +27,23 @@ public class UserController {
         UserResponseDTO userResponseDTO = UserResponseDTO.toDTO(createdUser);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponseDTO);
+    }
+
+    @PostMapping("/sports")
+    public ResponseEntity<UserResponseDTO> addSport(@RequestBody AddUserSportDTO dto) {
+        userService.addUserSport(dto.getUserId(), dto.getSportId(), dto.isFavorite(), dto.getLevel());
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @DeleteMapping("/{userId}/sports/{sportId}")
+    public ResponseEntity<Void> removeSport(
+            @PathVariable Integer userId,
+            @PathVariable Integer sportId) {
+
+        userService.removeUserSport(userId, sportId);
+
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping
