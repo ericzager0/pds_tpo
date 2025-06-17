@@ -48,6 +48,28 @@ public class Match {
     @Column(name = "min_level")
     private LevelEnum minLevel;
 
+    @Column(name = "min_radius")
+    private Integer minRadius;
+
+    public Integer getMinRadius() {
+        return minRadius;
+    }
+
+    public void setMinRadius(Integer minRadius) {
+        this.minRadius = minRadius;
+    }
+
+    public Integer getMinMatches() {
+        return minMatches;
+    }
+
+    public void setMinMatches(Integer minMatches) {
+        this.minMatches = minMatches;
+    }
+
+    @Column(name = "min_matches")
+    private Integer minMatches;
+
     @ManyToMany
     @JoinTable(
             name = "match_users",

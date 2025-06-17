@@ -4,27 +4,27 @@ import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
 @Converter(autoApply = true)
-public class LevelEnumConverter implements AttributeConverter<LevelEnum, String> {
+public class LevelEnumConverter implements AttributeConverter<LevelEnum, Integer> {
 
     @Override
-    public String convertToDatabaseColumn(LevelEnum attribute) {
+    public Integer convertToDatabaseColumn(LevelEnum attribute) {
         if (attribute == null) return null;
 
         return switch (attribute) {
-            case PRINCIPIANTE -> "principiante";
-            case INTERMEDIO -> "intermedio";
-            case AVANZADO -> "avanzado";
+            case PRINCIPIANTE -> 1;
+            case INTERMEDIO -> 2;
+            case AVANZADO -> 3;
         };
     }
 
     @Override
-    public LevelEnum convertToEntityAttribute(String dbData) {
+    public LevelEnum convertToEntityAttribute(Integer dbData) {
         if (dbData == null) return null;
 
         return switch (dbData) {
-            case "principiante" -> LevelEnum.PRINCIPIANTE;
-            case "intermedio" -> LevelEnum.INTERMEDIO;
-            case "avanzado" -> LevelEnum.AVANZADO;
+            case 1 -> LevelEnum.PRINCIPIANTE;
+            case 2 -> LevelEnum.INTERMEDIO;
+            case 3 -> LevelEnum.AVANZADO;
             default -> throw new IllegalArgumentException("Unknown state: " + dbData);
         };
     }

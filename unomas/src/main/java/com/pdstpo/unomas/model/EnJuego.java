@@ -49,10 +49,8 @@ public class EnJuego extends State{
 
         if (now.isBefore(matchEndTime)) {
         } else {
-            getMatchContext().setState(new Finalizado());
             getMatchContext().getMatch().setState(StateEnum.FINALIZADO);
-            System.out.println("Cambio de estado: FINALIZADO");
-
+            getMatchContext().setState(new Finalizado());
         }
     }
 }

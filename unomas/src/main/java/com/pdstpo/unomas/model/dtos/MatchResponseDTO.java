@@ -1,12 +1,15 @@
 package com.pdstpo.unomas.model.dtos;
 
 import com.pdstpo.unomas.model.entities.Match;
+import com.pdstpo.unomas.model.entities.User;
 import com.pdstpo.unomas.model.enums.LevelEnum;
 import com.pdstpo.unomas.model.enums.MatchmakingStrategyEnum;
 import com.pdstpo.unomas.model.enums.StateEnum;
 import org.locationtech.jts.geom.Point;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MatchResponseDTO {
     private Integer id;
@@ -24,6 +27,33 @@ public class MatchResponseDTO {
     private int currentPlayers;
     private LevelEnum maxLevel;
     private LevelEnum minLevel;
+    private Integer minRadius;
+    private Integer minMatches;
+    private List<UserPlayerDTO> players;
+
+    public List<UserPlayerDTO> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(List<UserPlayerDTO> players) {
+        this.players = players;
+    }
+
+    public Integer getMinRadius() {
+        return minRadius;
+    }
+
+    public void setMinRadius(Integer minRadius) {
+        this.minRadius = minRadius;
+    }
+
+    public Integer getMinMatches() {
+        return minMatches;
+    }
+
+    public void setMinMatches(Integer minMatches) {
+        this.minMatches = minMatches;
+    }
 
     public Integer getId() {
         return id;
@@ -147,6 +177,7 @@ public class MatchResponseDTO {
 
     public static MatchResponseDTO toDTO(Match match) {
         MatchResponseDTO dto = new MatchResponseDTO();
+        List<UserPlayerDTO> playersDtos = new ArrayList<>();
 
         dto.setId(match.getId());
         dto.setCreatorId(match.getCreator().getId());
@@ -169,6 +200,14 @@ public class MatchResponseDTO {
         dto.setCurrentPlayers(match.getPlayers() != null ? match.getPlayers().size() : 0);
         dto.setMaxLevel(match.getMaxLevel());
         dto.setMinLevel(match.getMinLevel());
+        dto.setMinRadius(match.getMinRadius());
+        dto.setMinMatches(match.getMinMatches());
+
+        for (User user : match.getPlayers()) {
+            playersDtos.add(new UserPlayerDTO(user.getUsername()));
+        }
+
+        dto.setPlayers(playersDtos);
 
         return dto;
     }

@@ -41,13 +41,12 @@ public class MatchRepository implements IMatchRepository {
             return null;
         }
 
-        MatchContext matchContext = new MatchContext();
         State state = StateFactory.create(match.getState());
         IMatchmakingStrategy matchmakingStrategy = matchmakingStrategyFactory.create(match.getMatchmakingStrategy());
+        MatchContext matchContext = new MatchContext(state);
 
         state.setMatchContext(matchContext);
         matchContext.setMatch(match);
-        matchContext.setState(state);
         matchContext.setMatchmakingStrategy(matchmakingStrategy);
 
         return matchContext;
@@ -65,16 +64,39 @@ public class MatchRepository implements IMatchRepository {
         List<MatchContext> matchContexts = new ArrayList<>();
 
         for (Match match : matches) {
-            MatchContext context = new MatchContext();
             State state = StateFactory.create(match.getState());
+            MatchContext context = new MatchContext(state);
 
             context.setMatch(match);
-            context.setState(state);
             state.setMatchContext(context);
-
             matchContexts.add(context);
         }
 
         return matchContexts;
     }
+
+    @Override
+    public List<MatchContext> search(Integer sportId) {
+        List<Match> matches = entityManager.createQuery(
+                        "SELECT m FROM Match m WHERE m.state = :state AND m.sport.id = :sportId", Match.class)
+                .setParameter("state", StateEnum.NECESITAMOS_JUGADORES)
+                .setParameter("sportId", sportId)
+                .getResultList();
+
+        List<MatchContext> matchContexts = new ArrayList<>();
+
+        for (Match match : matches) {
+            State state = StateFactory.create(match.getState());
+            IMatchmakingStrategy matchmakingStrategy = matchmakingStrategyFactory.create(match.getMatchmakingStrategy());
+            MatchContext context = new MatchContext(state);
+
+            context.setMatch(match);
+            context.setMatchmakingStrategy(matchmakingStrategy);
+            state.setMatchContext(context);
+            matchContexts.add(context);
+        }
+
+        return matchContexts;
+    }
+
 }

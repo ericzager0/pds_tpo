@@ -9,4 +9,5 @@ public interface IMatchRepository {
     Match save(Match match);
     MatchContext findById(Integer id);
     List<MatchContext> findAllForBotService();
+    List<MatchContext> search(Integer sportId);
 }

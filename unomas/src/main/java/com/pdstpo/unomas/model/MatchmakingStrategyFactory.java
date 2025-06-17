@@ -14,7 +14,7 @@ public class MatchmakingStrategyFactory {
     public IMatchmakingStrategy create(MatchmakingStrategyEnum strategyEnum) {
         return switch (strategyEnum) {
             case PROXIMITY -> new ProximityMatchmaking(userRepository);
-            case LEVEL -> new LevelMatchmaking();
+            case LEVEL -> new LevelMatchmaking(userRepository);
             case HISTORY -> new HistoryMatchmaking(userRepository);
         };
     }

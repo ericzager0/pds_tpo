@@ -2,6 +2,7 @@ package com.pdstpo.unomas.model;
 
 import com.pdstpo.unomas.model.enums.StateEnum;
 import com.pdstpo.unomas.repositories.IMatchRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -14,6 +15,7 @@ public class Bot {
     @Autowired
     private IMatchRepository matchRepository;
 
+    @Transactional
     @Scheduled(fixedRate = 60000)
     public void execute() {
         List<MatchContext> matches = matchRepository.findAllForBotService();

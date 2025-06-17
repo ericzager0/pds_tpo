@@ -20,6 +20,6 @@ public class ProximityMatchmaking implements IMatchmakingStrategy {
 
         Point point = match.getLocation();
 
-        return userRepository.findUsersNearLocation(point.getX(), point.getY(), 100);
+        return userRepository.findUsersNearLocation(point.getX(), point.getY(), match.getMinRadius());
     }
 }

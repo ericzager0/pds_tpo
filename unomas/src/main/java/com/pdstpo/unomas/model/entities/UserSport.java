@@ -1,6 +1,7 @@
 package com.pdstpo.unomas.model.entities;
 
 import com.pdstpo.unomas.model.enums.LevelEnum;
+import com.pdstpo.unomas.model.enums.LevelEnumConverter;
 import jakarta.persistence.*;
 
 @Entity
@@ -18,6 +19,8 @@ public class UserSport {
     @MapsId("sportId")
     private Sport sport;
 
+    @Convert(converter = LevelEnumConverter.class)
+    @Column(name = "level")
     private LevelEnum level;
 
     private boolean favourite;

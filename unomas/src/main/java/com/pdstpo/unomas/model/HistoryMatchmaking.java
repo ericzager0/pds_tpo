@@ -18,6 +18,6 @@ public class HistoryMatchmaking implements IMatchmakingStrategy {
 
     @Override
     public List<User> search(Match match) {
-        return userRepository.findUsersWithMinCompletedMatches(1, match.getSport().getId());
+        return userRepository.findUsersWithMinCompletedMatches(match.getMinMatches(), match.getSport().getId());
     }
 }

@@ -4,6 +4,6 @@ public class PushNotification implements INotificationStrategy {
 
     @Override
     public void send(Notification notification) {
-        System.out.println("Se envía notificación push a " + notification.getTo().getUsername());
+        System.out.println("Se envía notificación push a " + notification.getTo().getUsername() + ". Mensaje: " + notification.getMessage());
     }
 }

@@ -22,6 +22,24 @@ public class MatchCreateDTO {
     private MatchmakingStrategyEnum matchmaking;
     private LevelEnum maxLevel;
     private LevelEnum minLevel;
+    private Integer minRadius;
+    private Integer minMatches;
+
+    public Integer getMinRadius() {
+        return minRadius;
+    }
+
+    public void setMinRadius(Integer minRadius) {
+        this.minRadius = minRadius;
+    }
+
+    public Integer getMinMatches() {
+        return minMatches;
+    }
+
+    public void setMinMatches(Integer minMatches) {
+        this.minMatches = minMatches;
+    }
 
     public Integer getCreatorId() {
         return creatorId;
@@ -115,6 +133,8 @@ public class MatchCreateDTO {
         match.setMatchmakingStrategy(matchmaking);
         match.setMaxLevel(maxLevel);
         match.setMinLevel(minLevel);
+        match.setMinRadius(minRadius);
+        match.setMinMatches(minMatches);
 
         return match;
     }

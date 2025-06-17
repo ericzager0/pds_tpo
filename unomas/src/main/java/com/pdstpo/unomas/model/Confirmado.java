@@ -27,8 +27,8 @@ public class Confirmado extends State {
         boolean removed = players.removeIf(u -> u.getId().equals(user.getId()));
 
         if (removed) {
-            getMatchContext().setState(new NecesitamosJugadores());
             getMatchContext().getMatch().setState(StateEnum.NECESITAMOS_JUGADORES);
+            getMatchContext().setState(new NecesitamosJugadores());
         } else {
             throw new IllegalArgumentException("El jugador con id " + user.getId() + " no forma parte del partido.");
         }
@@ -44,8 +44,8 @@ public class Confirmado extends State {
         User creator = getMatchContext().getMatch().getCreator();
 
         if (creator.getId().equals(requestingUser.getId())) {
-            getMatchContext().setState(new Cancelado());
             getMatchContext().getMatch().setState(StateEnum.CANCELADO);
+            getMatchContext().setState(new Cancelado());
         } else {
             throw new IllegalArgumentException("El jugador con id " + requestingUser.getId() + " no es el creador del partido y por lo tanto no puede cancelarlo.");
         }
@@ -64,9 +64,8 @@ public class Confirmado extends State {
 
         if (now.isBefore(matchStartTime)) {
         } else {
-            getMatchContext().setState(new EnJuego());
             getMatchContext().getMatch().setState(StateEnum.EN_JUEGO);
-            System.out.println("Cambio de estado: EN_JUEGO");
+            getMatchContext().setState(new EnJuego());
         }
     }
 

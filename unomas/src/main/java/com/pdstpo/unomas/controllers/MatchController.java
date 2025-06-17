@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -17,6 +18,18 @@ public class MatchController {
 
     @Autowired
     private IMatchService matchService;
+
+    @GetMapping()
+    public ResponseEntity<List<MatchResponseDTO>> getMatches(@RequestBody SearchMatchDTO dto) {
+        List<Match> matches = matchService.search(dto.getSportId(), dto.getRequestingUserId());
+        List<MatchResponseDTO> dtos = new ArrayList<>();
+
+        for (Match match : matches) {
+            dtos.add(MatchResponseDTO.toDTO(match));
+        }
+
+        return ResponseEntity.ok(dtos);
+    }
 
     @PostMapping
     public ResponseEntity<MatchResponseDTO> createMatch(@RequestBody MatchCreateDTO matchCreateDTO) {
@@ -67,5 +80,12 @@ public class MatchController {
         matchService.addComment(matchId, dto.getComment(), dto.getUserId());
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @PatchMapping("/{matchId}")
+    public ResponseEntity<Void> updateMatch(@PathVariable Integer matchId, @RequestBody MatchUpdateDTO dto) {
+        matchService.updateMatch(matchId, dto.getUserId(), dto.getState());
+
+        return ResponseEntity.noContent().build();
     }
 }

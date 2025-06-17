@@ -28,8 +28,8 @@ public class NecesitamosJugadores extends State {
                 match.getPlayers().add(user);
 
                 if (match.getPlayers().size() == requiredPlayers) {
-                    getMatchContext().setState(new PartidoArmado());
                     match.setState(StateEnum.PARTIDO_ARMADO);
+                    getMatchContext().setState(new PartidoArmado());
                 }
 
                 return;
@@ -65,8 +65,8 @@ public class NecesitamosJugadores extends State {
         User creator = getMatchContext().getMatch().getCreator();
 
         if (creator.getId().equals(requestingUser.getId())) {
-            getMatchContext().setState(new Cancelado());
             getMatchContext().getMatch().setState(StateEnum.CANCELADO);
+            getMatchContext().setState(new Cancelado());
         } else {
             throw new IllegalArgumentException("El jugador con id " + requestingUser.getId() + " no es el creador del partido y por lo tanto no puede cancelarlo.");
         }
